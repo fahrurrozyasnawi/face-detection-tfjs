@@ -1,0 +1,80 @@
+const [picture, setPicture] = useState(null);
+    const [imgData, setImgData] = useState(null);
+
+    const onImageChange = e =>{
+        if (e.target.files[0]) {
+            console.log("picture: ", e.target.files);
+            setPicture(e.target.files[0]);
+            const reader = new FileReader();
+            
+            reader.addEventListener("load", () => {
+                const imageData = document.getElementById("image-preview");
+                imageData.src = reader.result;
+            });
+            reader.readAsDataURL(e.target.files[0]);
+        }
+    };
+
+    const modelFace = async () =>{
+        const imgData = document.querySelector("#image-preview");
+        const canvas = document.getElementById("myCanvas");
+        const context = canvas.getContext('2d');
+
+        const imageWidth = imgData.clientWidth;
+        const imageHeight = imgData.clientHeight;
+        console.log("Height : ", imageHeight);
+        console.log("Width : ", imageWidth);
+        // const imgData = onImageChange();
+        // const imgOutput = document.getElementById("image-output-detect");
+        // const imgOut = 'output.jpg';
+        // ctx.drawImage(imgData, ctx, 649, 480);
+
+        const model = await blazeface.load();
+        const returnTensors = false;
+        const predictions = await model.estimateFaces(imgData, returnTensors);
+
+        if (predictions.length > 0) {
+            console.log(predictions);
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            
+            for (let i = 0; i < predictions.length; i++) {
+                const start = predictions[i].topLeft;
+                const end = predictions[i].bottomRight;
+                // const probability = predictions[i].probability;
+                const size = [end[0] - start[0], end[1] - start[1]];
+
+                // ctx = imgOutput.getContext('2d');
+                // context.drawImage(imgData, 0, 0, width, height);
+                context.beginPath();
+                context.strokeStyle = "green";
+                context.lineWidth = "2";
+                // context.fillStyle = "rgba(0, 255, 0, 0.8)";
+                // context.fillRect(start[0], start[1], size[0], size[1]);
+                context.rect(start[0], start[1], size[0], size[1]);
+                context.stroke();
+                // ctx.stroke();
+                // ctx.fillStyle = "rgba(0, 255, 0, 0.5)";
+
+                // ctx.fillRect(start[0], start[1], size[0], size[1]);
+
+                // const imgOutput = document.getElementById('image-output-detect');
+                // sharp(imgData).extract({})
+            }
+            
+        }
+        // setImgData(imgData);
+    }
+
+    // const startModel = async () => {
+    //     const imgWidth = imgData.clientWidth;
+    //     const imgHeight = imgData.clientHeight;
+
+    //     const canvas = document.getElementById('canvas');
+    //     canvas.width = imgWidth;
+    //     canvas.height = imgHeight;
+    //     context.canvas.getContext('2d');
+
+    //     modelFace();
+    // }
+
+    // modelFace();

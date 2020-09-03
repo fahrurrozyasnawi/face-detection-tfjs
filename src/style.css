@@ -1,0 +1,37 @@
+.image-preview{
+    height: 500px;
+    width: auto;/*maintain aspect ratio*/
+    max-width: 800px;
+}
+
+.center{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.main{
+  position: relative;
+
+}
+
+.outputExtract{
+  display: none;
+}
+
+#myCanvas{
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#canvasOutput{
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.image-output-detect{
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+}
